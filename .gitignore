@@ -1,5 +1,7 @@
 .vscode/
 tools/
+test/
 *.exe
 *.txt
 *.bat
+*.out
