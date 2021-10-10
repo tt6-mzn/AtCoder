@@ -92,6 +92,32 @@ public:
 		}
 	}
 
+	void simulate(int day, const Action& action) {
+		/* actionを適用 */
+		if (action.vs.size() == 2) {
+			purchase(action.vs[0], action.vs[1]);
+		} else if (action.vs.size() == 4) {
+			move(action.vs[0], action.vs[1], action.vs[2], action.vs[3]);
+		}
+		/* 野菜の出現 */
+		for (const Vegetable& vege : veges_start[day]) {
+			vege_values[vege.r][vege.c] = vege.v;
+		}
+		/* 盤面の更新とお金の計算 */
+		rep(i, N) {
+			rep(j, N) {
+				if (has_machine[i][j] && vege_values[i][j] > 0) {
+					money += vege_values[i][j] * count_connected_machines(i, j);
+					vege_values[i][j] = 0;
+				}
+			}
+		}
+		/* 野菜の消滅 */
+		for (const Vegetable& vege : veges_end[day]) {
+			vege_values[vege.r][vege.c] = 0;
+		}
+	}
+
     int count_connected_machines(int r, int c) {
         vector<pair<int, int>> queue = {{r, c}};
         vector<vector<int>> visited(N, vector<int>(N, 0));
