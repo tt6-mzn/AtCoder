@@ -9,7 +9,7 @@ using namespace std;
  * n: isPrime[n]まで求める
  * O(nloglogn)
 */
-vector<bool> Eratostheness(int n) {
+vector<bool> eratostheness(int n) {
     vector<bool> isPrime(n + 1, true);
     isPrime[0] = false; isPrime[1] = false;
     for (int i = 2; i * i < n + 1; i++) {
@@ -26,7 +26,7 @@ vector<bool> Eratostheness(int n) {
  * となるような vector を返す.
  * O(√bloglogb + (b - a)loglogb)
 */
-vector<bool> Eratostheness_interval(long long a, long long b) {
+vector<bool> eratostheness_interval(long long a, long long b) {
     long long sqrt_b = (long long)sqrt((double)b) + 1;
     vector<bool> isPrime(sqrt_b + 1, true);
     vector<bool> isPrime_AB(b - a + 1, true);
