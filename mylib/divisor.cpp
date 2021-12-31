@@ -22,7 +22,7 @@ vector<long long> enum_divisors(long long n) {
     vector<long long> v1, v2;
     v1.push_back(1);
     v2.push_back(n);
-    int i = 2;
+    long long i = 2;
     while (i * i < n) {
         if (n % i == 0) {
             v1.push_back(i);
