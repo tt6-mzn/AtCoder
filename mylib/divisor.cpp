@@ -2,6 +2,9 @@
 using namespace std;
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
 
+/* 自然数nの約数の個数を数える
+ * O(√n)
+*/
 long long count_divisors(long long n) {
     long long ret = 1, i = 2;
     if (n == 1) return 1;
