@@ -1,6 +1,7 @@
 .vscode/
 tools/
 test/
+.env/
 *.exe
 *.txt
 *.bat
