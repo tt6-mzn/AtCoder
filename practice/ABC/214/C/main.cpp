@@ -8,13 +8,11 @@ const long long INF = 1LL << 62;
 
 class Edge {
 public:
-	int from; // 辺の始点
 	int to; // 辺の終点
 	long long cost = 1; // 辺の重み
 	Edge() {};
-	Edge(int from, int to) : from(from), to(to) {};
-	Edge(int from, int to, long long cost)
-		: from(from), to(to), cost(cost) {};
+	Edge(int to) : to(to) {};
+	Edge(int to, long long cost) : to(to), cost(cost) {};
 };
 
 class Graph {
@@ -29,8 +27,8 @@ public:
 	void add_edge(int from, int to);
 	void add_edge(int from, int to, long long cost);
 	void dijkstra(int s); // ダイクストラ法
-	long long distance(int to) const; // ダイクストラ法の結果に基づいて頂点toまでの最短距離を返す
-	vector<int> path(int to) const; // ダイクストラ法の結果に基づいて頂点toまでのルートを返す
+	long long distance(int to) const; // ダイクストラ法の結果から頂点toまでの最短距離を返す
+	vector<int> path(int to) const; // ダイクストラ法の結果から頂点toまでのルートを返す
 };
 
 /* 頂点数と辺の数を指定して初期化 */
@@ -47,7 +45,7 @@ void Graph::add_edge(int from, int to) {
 		throw out_of_range("[Graph::add_edge] index out of range");
 		exit(0);
 	}
-	Edge tmp(from, to);
+	Edge tmp(to);
 	_Graph.at(from).push_back(tmp);
 	E++;
 }
@@ -61,7 +59,7 @@ void Graph::add_edge(int from, int to, long long cost) {
 		throw out_of_range("[Graph::add_edge] index out of range");
 		exit(0);
 	}
-	Edge tmp(from, to, cost);
+	Edge tmp(to, cost);
 	_Graph.at(from).push_back(tmp);
 	E++;
 }
@@ -74,30 +72,49 @@ void Graph::dijkstra(int s) {
 	_distance.assign(V, INF);
 	_prev.assign(V, -1);
 	priority_queue<
-		pair<long long, int>,
-		vector<pair<long long, int>>,
-		greater<pair<long long, int>>> que;
-	_distance.at(s) = 0;
-	que.emplace(_distance.at(s), s);
+		tuple<long long, int, int>,
+		vector<tuple<long long, int, int>>,
+		greater<tuple<long long, int, int>>> que;
+	que.emplace(0, -1, s);
 	while (!que.empty()) {
-		long long d; int v;
-		tie(d, v) = que.top(); que.pop();
-		if (_distance.at(v) < d) continue;
-		for (const Edge& e : _Graph.at(v)) {
-			if (_distance.at(e.from) + e.cost < _distance.at(e.to)) {
-				_distance.at(e.to) = _distance.at(e.from) + e.cost;
-				_prev.at(e.to) = e.from;
-				que.emplace(_distance.at(e.to), e.to);
-			}
+		long long d; int pre, v;
+		tie(d, pre, v) = que.top(); que.pop();
+		if (_distance[v] != INF) continue;
+		_distance[v] = d;
+		_prev[v] = pre;
+		for (const Edge& next : _Graph[v]) {
+			que.emplace(d + next.cost, v, next.to);
 		}
 	}
 }
 
+/* dijkstra実行後にのみ使用可能
+ * 頂点toまでの最短距離を返す
+*/
 long long Graph::distance(int to) const {
-	if (to < 0 || V <= to) {
+	if (_distance.size() == 0 || to < 0 || V <= to) {
 		throw out_of_range("[Graph::distance] index out of range");
+		exit(0);
 	}
 	return _distance.at(to);
+}
+
+/* dijkstra実行後にのみ使用可能
+ * 頂点toまでの最短経路の一つを復元する
+ * 始点の頂点は返り値に含まれない
+*/
+vector<int> Graph::path(int to) const {
+	if (_distance.size() == 0 || to < 0 || V <= to) {
+		throw out_of_range("[Graph::path] index out of range");
+		exit(0);
+	}
+	vector<int> ret;
+	while (_prev.at(to) != -1) {
+		ret.push_back(to);
+		to = _prev.at(to);
+	}
+	reverse(ret.begin(), ret.end());
+	return ret;
 }
 
 int main() {
