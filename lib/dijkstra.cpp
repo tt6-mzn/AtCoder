@@ -22,9 +22,9 @@ private:
 public:
 	int V; // 頂点数
 	int E = 0; // 辺数
-	Dijkstra(int V);
-	void add_edge(int from, int to);
-	void add_edge(int from, int to, long long cost);
+	Dijkstra(int V); // コンストラクタ
+	void add_edge(int from, int to); // 辺の追加
+	void add_edge(int from, int to, long long cost); // 辺の追加(重みあり)
 	void dijkstra(int s); // ダイクストラ法
 	long long distance(int to) const; // ダイクストラ法の結果から頂点toまでの最短距離を返す
 	vector<int> path(int to) const; // ダイクストラ法の結果から頂点toまでのルートを返す
