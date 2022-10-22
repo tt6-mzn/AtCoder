@@ -5,12 +5,9 @@ using namespace atcoder;
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
 
 int main() {
-	set<int> st;
-	rep(i, 5) {
-		int t;
-		cin >> t;
-		st.insert(t);
-	}
-	cout << st.size() << endl;
+	string s, t;
+	cin >> s >> t;
+	if (s == t.substr(0, s.size())) cout << "Yes" << endl;
+	else cout << "No" << endl;
 	return 0;
 }
