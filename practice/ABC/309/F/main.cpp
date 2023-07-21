@@ -37,27 +37,29 @@ int e() { return inf; }
 int main() {
 	int n;
 	cin >> n;
-	map<int, vector<pair<int, int>>> ps;
-	CC<int> w_cc;
+	map<int, vector<pair<int, int>>> hwd;
+	CC w_cc;
 	rep(_, n) {
-		vector<int> hwd(3);
-		rep(i, 3) cin >> hwd[i];
-		sort(hwd.begin(), hwd.end());
-		ps[hwd[0]].emplace_back(hwd[1], hwd[2]);
-		w_cc.add(hwd[1]);
+		vector<int> hwd_(3);
+		rep(i, 3) cin >> hwd_[i];
+		sort(hwd_.begin(), hwd_.end());
+		hwd[hwd_[0]].emplace_back(hwd_[1], hwd_[2]);
+		w_cc.add(hwd_[1]);
 	}
 
-	segtree<int, op, e> st(w_cc.size());
-	for (auto [h, wd] : ps) {
+	segtree<int, op, e> tree(w_cc.size());
+
+	for (auto [h, wd] : hwd) {
 		for (auto [w, d] : wd) {
 			w = w_cc(w);
-			if (st.prod(0, w) < d) {
+			if (tree.prod(0, w) < d) {
 				cout << "Yes" << endl;
 				return 0;
 			}
 		}
 		for (auto [w, d] : wd) {
-			st.set(w, op(d, st.get(w)));
+			w = w_cc(w);
+			tree.set(w, op(d, tree.get(w)));
 		}
 	}
 	cout << "No" << endl;
